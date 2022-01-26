@@ -1,4 +1,5 @@
 # Spatio-Temporal Graph Few-Shot Learning with Cross-City Knowledge Transfer
+![Spatio-Temporal Graph Few-Shot Learning with Cross-City Knowledge Transfer](framework.png "Model Architecture")
 
 ## Requirements
 - torch >= 1.8.1
