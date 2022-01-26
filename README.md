@@ -10,10 +10,7 @@
 - tqdm
 
 ## Data
-- METR-LA: 
-- PEMS-BAY:
-- DiDi-Chengdu:
-- DiDi-Shenzhen:
+- Download the data from [google drive](https://drive.google.com/file/d/16xbiRvh5jJx2A4Swv9dEMEz_Y0AEoQTM/view?usp=sharing)
 
 ## Model training & Testing
 ```bash
