@@ -20,3 +20,21 @@ CUDA_VISIBLE_DEVICES=[CUDA NUM] python main.py --test_dataset [FEW-SHOT DATASET]
 # For example: Use GRU model to train a model, and test on PEMS-BAY datasets
 CUDA_VISIBLE_DEVICES=0 python main.py --test_dataset pems-bay --model GRU
 ```
+
+## Citation
+If you find this repository, e.g., the paper, code and the datasets, useful in your research, please cite the following paper:
+```
+@inproceedings{DBLP:conf/cikm/LuGJFZ20,
+  author    = {Bin Lu and
+               Xiaoying Gan and
+               Weinan Zhang and
+               Huaxiu Yao abd
+               Luoyi Fu and
+               Xinbing Wang},
+  title     = {Spatio-Temporal Graph Few-Shot Learning with Cross-City Knowledge Transfer},
+  booktitle = {{KDD} '22: The 28th {ACM} SIGKDD Conference on Knowledge Discovery and Data Mining,
+              Washington, DC, USA, August 14--18, 2022},
+  publisher = {{ACM}},
+  year      = {2022}
+}
+```
