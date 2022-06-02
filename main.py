@@ -103,7 +103,7 @@ if __name__ == '__main__':
 
         # loss = model.meta_train(spt_task_data, spt_task_A, qry_task_data, qry_task_A)
         end_time = time.time()
-        if epoch % 10 == 0:
+        if epoch % 20 == 0:
             print("[Source Train] epoch #{}/{}: loss is {}, training time is {}".format(epoch+1, args.source_epochs, loss, end_time-start_time))
 
     print("Source dataset meta-train finish.")

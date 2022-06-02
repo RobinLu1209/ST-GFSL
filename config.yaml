@@ -2,7 +2,7 @@ data:
   data_keys: ['metr-la', 'pems-bay', 'shenzhen', 'chengdu_m']
   metr-la:
     dataset_path: data/metr-la/dataset.npy
-    adjacency_matrix_path: ../data/traffic/metr-la/matrix.npy
+    adjacency_matrix_path: data/metr-la/matrix.npy
     time_step: 34272
     node_num: 207
     speed_mean: 58.465786
@@ -10,7 +10,7 @@ data:
   
   pems-bay:
     dataset_path: data/pems-bay/dataset.npy
-    adjacency_matrix_path: ../data/traffic/pems-bay/matrix.npy
+    adjacency_matrix_path: data/pems-bay/matrix.npy
     time_step: 52116
     node_num: 325
     speed_mean: 62.621582859
@@ -18,7 +18,7 @@ data:
 
   chengdu_m:
     dataset_path: data/chengdu_m/dataset.npy
-    adjacency_matrix_path: ../data/traffic/chengdu_m/matrix.npy
+    adjacency_matrix_path: data/chengdu_m/matrix.npy
     time_step: 17280
     node_num: 524
     speed_mean: 29.0982979559
@@ -35,8 +35,6 @@ data:
 task:
   his_num: 12
   pred_num: 6
-  source_epochs: 50
-  target_epochs: 70
   batch_size: 5
   test_batch_size: 128
   task_num: 2
@@ -49,7 +47,7 @@ model:
   output_dim: 1
   meta_dim: 16
   update_lr: 0.01
-  meta_lr: 0.001
+  meta_lr: 0.01
   loss_lambda: 1.5
   update_step: 5
   update_step_test: 10

@@ -278,44 +278,45 @@ class STMAML(nn.Module):
                 train_losses.append(loss.detach().cpu().numpy())
             avg_train_loss = sum(train_losses)/len(train_losses)
             end_time = time.time()
-            print("[Target Fine-tune] epoch #{}/{}: loss is {}, fine-tuning time is {}".format(epoch+1, target_epochs, avg_train_loss, end_time-start_time))
+            if epoch % 10 == 0:
+                print("[Target Fine-tune] epoch #{}/{}: loss is {}, fine-tuning time is {}".format(epoch+1, target_epochs, avg_train_loss, end_time-start_time))
 
-            with torch.no_grad():
-                test_start = time.time()
-                maml_model.eval()
-                for step, (data, A_wave) in enumerate(test_dataloader):
-                    data, A_wave = data.cuda(), A_wave.cuda()
-                    data.node_num = data.node_num[0]
-                    batch_size, node_num, seq_len, _ = data.x.shape
-                    hidden = torch.zeros(batch_size, node_num, self.model_args['hidden_dim']).cuda()
+        with torch.no_grad():
+            test_start = time.time()
+            maml_model.eval()
+            for step, (data, A_wave) in enumerate(test_dataloader):
+                data, A_wave = data.cuda(), A_wave.cuda()
+                data.node_num = data.node_num[0]
+                batch_size, node_num, seq_len, _ = data.x.shape
+                hidden = torch.zeros(batch_size, node_num, self.model_args['hidden_dim']).cuda()
 
-                    if self.model_name == 'GWN':
-                        adj_mx = [A_wave[0].float(), (A_wave[0].float()).t()]
-                        out, meta_graph = maml_model(data, adj_mx)
-                    else:
-                        out, meta_graph = maml_model(data, A_wave[0].float())
+                if self.model_name == 'GWN':
+                    adj_mx = [A_wave[0].float(), (A_wave[0].float()).t()]
+                    out, meta_graph = maml_model(data, adj_mx)
+                else:
+                    out, meta_graph = maml_model(data, A_wave[0].float())
 
-                    if step == 0:
-                        outputs = out
-                        y_label = data.y
-                    else:
-                        outputs = torch.cat((outputs, out))
-                        y_label = torch.cat((y_label, data.y))
-                outputs = outputs.permute(0, 2, 1).detach().cpu().numpy()
-                y_label = y_label.permute(0, 2, 1).detach().cpu().numpy()
-                result = metric_func(pred=outputs, y=y_label, times=self.task_args['pred_num'])
-                test_end = time.time()
-                if epoch % 1 == 0:
-                    result_print(result, info_name='Evaluate')
-                    print("[Target Test] testing time is {}".format(test_end-test_start))
-                if np.sum(result['MAE']) < min_MAE:
-                    best_result = result
-                    best_epoch = epoch
-                    min_MAE = np.sum(result['MAE'])
-                    best_meta_graph = meta_graph
+                if step == 0:
+                    outputs = out
+                    y_label = data.y
+                else:
+                    outputs = torch.cat((outputs, out))
+                    y_label = torch.cat((y_label, data.y))
+            outputs = outputs.permute(0, 2, 1).detach().cpu().numpy()
+            y_label = y_label.permute(0, 2, 1).detach().cpu().numpy()
+            result = metric_func(pred=outputs, y=y_label, times=self.task_args['pred_num'])
+            test_end = time.time()
+
+            result_print(result, info_name='Evaluate')
+            print("[Target Test] testing time is {}".format(test_end-test_start))
+            # if np.sum(result['MAE']) < min_MAE:
+            #     best_result = result
+            #     best_epoch = epoch
+            #     min_MAE = np.sum(result['MAE'])
+            #     best_meta_graph = meta_graph
         
-        print("Best epoch is @{}".format(best_epoch))
-        result_print(best_result, info_name='Best')
-        np.save("result/best_meta_graph_shenzhen_0124.npy", best_meta_graph.detach().cpu().numpy())
+        # print("Best epoch is @{}".format(best_epoch))
+        # result_print(best_result, info_name='Best')
+        # np.save("result/best_meta_graph_shenzhen_0124.npy", best_meta_graph.detach().cpu().numpy())
 
         
