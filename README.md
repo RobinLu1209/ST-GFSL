@@ -24,7 +24,7 @@ CUDA_VISIBLE_DEVICES=0 python main.py --test_dataset pems-bay --model GRU
 ## Citation
 If you find this repository, e.g., the paper, code and the datasets, useful in your research, please cite the following paper:
 ```
-@inproceedings{DBLP:conf/cikm/LuGJFZ20,
+@inproceedings{DBLP:conf/KDD/CrossCityTransfer22,
   author    = {Bin Lu and
                Xiaoying Gan and
                Weinan Zhang and
