@@ -28,7 +28,7 @@ If you find this repository, e.g., the paper, code and the datasets, useful in y
   author    = {Bin Lu and
                Xiaoying Gan and
                Weinan Zhang and
-               Huaxiu Yao abd
+               Huaxiu Yao and
                Luoyi Fu and
                Xinbing Wang},
   title     = {Spatio-Temporal Graph Few-Shot Learning with Cross-City Knowledge Transfer},
