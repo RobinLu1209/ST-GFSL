@@ -235,15 +235,7 @@ class STMAML(nn.Module):
         """
         finetunning stage in MAML
         """
-        # torch.save(self.model.state_dict(), 'shenzhen_gwn_model.pkl')
-        # print("Model saved.")
-        # self.model.load_state_dict(torch.load('shenzhen_gwn_model.pkl'))
         maml_model = deepcopy(self.model)
-        if self.model_name == 'GWN':
-            maml_model = MetaGWN(self.model_args, self.task_args)
-            maml_model.load_state_dict(torch.load('shenzhen_gwn_model.pkl'))
-            print("model load successfully.")
-            maml_model = maml_model.cuda()
 
         optimizer = optim.Adam(maml_model.parameters(), lr=self.meta_lr, weight_decay=1e-2)
         min_MAE = 10000000
