@@ -168,65 +168,6 @@ class STMAML(nn.Module):
 
         return model_loss.detach().cpu().numpy()
 
-    def meta_train(self, data_spt, matrix_spt, data_qry, matrix_qry):
-        """
-        : param data_spt and data_qry are list of Data
-        : param matrix_spt and matrix_qry are list of matrix
-        : param stage are used to classify different stage
-        """
-
-        model_loss = 0
-
-        for i in range(self.task_num):
-            
-            maml_model = deepcopy(self.model)
-            optimizer = optim.Adam(maml_model.parameters(), lr=self.update_lr, weight_decay=1e-2)
-
-            for k in range(self.update_step):
-                batch_size, node_num, seq_len, _ = data_spt[i].x.shape
-                hidden = torch.zeros(batch_size, node_num, self.model_args['hidden_dim']).cuda()
-
-                if self.model_name == 'GWN':
-                    adj_mx = [matrix_spt[i], (matrix_spt[i]).t()]
-                    out, meta_graph = maml_model(data_spt[i], adj_mx)
-                else:
-                    out, meta_graph = maml_model(data_spt[i], matrix_spt[i])
-
-
-                if self.model_name in ['v_GRU', 'r_GRU', 'v_STGCN']:
-                    loss = self.loss_criterion(out, data_spt[i].y)
-                else:
-                    # loss = self.calculate_loss(out, data_spt[i].y, meta_graph, matrix_spt[i], 'source', graph_loss=False)
-                    loss = self.calculate_loss(out, data_spt[i].y, meta_graph, matrix_spt[i], 'source', loss_lambda=self.loss_lambda)
-                optimizer.zero_grad()
-                loss.backward()
-                optimizer.step()
-
-            self.model = deepcopy(maml_model)
-            
-            batch_size, node_num, seq_len, _ = data_qry[i].x.shape
-            hidden = torch.zeros(batch_size, node_num, self.model_args['hidden_dim']).cuda()
-
-            if self.model_name == 'GWN':
-                adj_mx = [matrix_qry[i], (matrix_qry[i]).t()]
-                out, meta_graph = self.model(data_qry[i], adj_mx)
-            else:
-                out, meta_graph = self.model(data_qry[i], matrix_qry[i])
-
-            if self.model_name in ['v_GRU', 'r_GRU', 'v_STGCN']:
-                loss_q = self.loss_criterion(out, data_qry[i].y)
-            else:
-                # loss_q = self.calculate_loss(out, data_qry[i].y, meta_graph, matrix_qry[i], 'target_maml', graph_loss=False)
-                loss_q = self.calculate_loss(out, data_qry[i].y, meta_graph, matrix_qry[i], 'target_maml', loss_lambda=self.loss_lambda)
-            model_loss += loss_q
-
-        model_loss = model_loss / self.task_num
-        self.meta_optim.zero_grad()
-        model_loss.backward()
-        self.meta_optim.step()
-
-        return model_loss.detach().cpu().numpy()
-
     def forward(self, data, matrix):
         out, meta_graph = self.model(data, matrix)
         return out, meta_graph
