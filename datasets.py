@@ -99,7 +99,7 @@ class traffic_dataset(Dataset):
             stds = np.std(X, axis=(0, 2))
             X = X / stds.reshape(1, -1, 1)
 
-            X = X[:, :, :288*3]
+            X = X[:, :, :288 * self.target_days]
 
             x_inputs, y_outputs = generate_dataset(X, self.task_args['his_num'], self.task_args['pred_num'], means, stds)
             
